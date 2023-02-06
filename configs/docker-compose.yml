@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  aws-cli:
+    image: amazon/aws-cli
+    volumes:
+      - ~/.aws:/root/.aws
+  gcloud-cli:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud
+  terraform:
+    image: hashicorp/terraform:${TERRAFORM_VERSION:-1.3.7}
+    environment:
+      - AWS_PROFILE=${AWS_PROFILE}
+      - GCLOUD_PROJECT=${GCLOUD_PROJECT}
+    working_dir: /work
+    volumes:
+      - ~/.aws:/root/.aws
+      - ~/.config/gcloud:/root/.config/gcloud
+      - ${PWD}:/work
+  tflint:
+    image: ghcr.io/terraform-linters/tflint-bundle
+    working_dir: /work
+    volumes:
+      - ${PWD}:/work
+  renovate:
+    image: renovate/renovate
+    environment:
+      - RENOVATE_TOKEN=${RENOVATE_TOKEN}
+      - LOG_LEVEL=debug
+      - RENOVATE_CONFIG_FILE=renovate.json
+      - RENOVATE_BASE_BRANCHES=${RENOVATE_BASE_BRANCHES}
+    volumes:
+      - ${PWD}:/usr/src/app
