@@ -8,7 +8,7 @@ docker compose -f ~/workspace/operations/docker-compose.yml run --rm aws-cli sso
 ## Google Cloud
 ```shell
 docker compose -f ~/workspace/operations/docker-compose.yml run --rm gcloud-cli init
-```shell
+```
 
 ## Terraform
 ### AWS
